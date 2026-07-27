@@ -6,6 +6,8 @@
 <title>Nati Academy — Result Checker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root{
     --navy:#0b1f3a;
@@ -170,19 +172,19 @@
     margin-bottom:16px;
   }
   .passport{
-    width:52px; height:52px;
-    border-radius:4px;
+    width:80px; height:80px;
+    border-radius:6px;
     object-fit:cover;
-    border:1.5px solid var(--line);
+    border:2px solid var(--gold);
     flex-shrink:0;
   }
   .passport-fallback{
-    width:52px; height:52px;
-    border-radius:4px;
-    border:1.5px solid var(--line);
+    width:80px; height:80px;
+    border-radius:6px;
+    border:2px solid var(--gold);
     background:var(--cream);
     display:flex; align-items:center; justify-content:center;
-    font-size:20px;
+    font-size:30px;
     flex-shrink:0;
   }
   .result-name{
@@ -214,24 +216,27 @@
   table{
     width:100%;
     border-collapse:collapse;
-    font-size:13.5px;
+    font-size:13px;
+    border:1.5px solid var(--navy);
   }
   th{
     text-align:left;
-    font-size:10.5px;
+    font-size:10px;
     text-transform:uppercase;
     letter-spacing:0.06em;
-    color:#8a8577;
-    padding:6px 4px;
-    border-bottom:1.5px solid var(--navy);
+    color:var(--gold-soft);
+    padding:10px 8px;
+    background:var(--navy);
+    border:1px solid var(--navy-deep);
   }
   td{
-    padding:9px 4px;
-    border-bottom:1px solid var(--line);
+    padding:9px 8px;
+    border:1px solid var(--line);
     font-family:'Space Mono', monospace;
   }
-  td:first-child, th:first-child{font-family:'Inter', sans-serif;}
-  tr:last-child td{border-bottom:none;}
+  td:first-child, th:first-child{font-family:'Inter', sans-serif; font-weight:600;}
+  tbody tr:nth-child(even){background:var(--cream);}
+  tbody tr:hover{background:#f0ead9;}
 
   .summary-row{
     display:flex;
@@ -317,6 +322,9 @@
       </table>
       </div>
 
+      <button id="downloadBtn" onclick="downloadPDF()" style="margin-top:20px; background:var(--gold); color:var(--navy);">
+        Download as PDF
+      </button>
     </div>
   </div>
 
@@ -326,9 +334,144 @@
     sort it on the spot.
   </footer>
 
+  <!-- Hidden PDF template: built and captured only when Download is clicked -->
+  <div id="pdfTemplate" style="position:absolute; left:-9999px; top:0; width:780px; background:#fff; padding:40px; font-family:'Inter', sans-serif; color:#1b2430;">
+    <div style="position:relative; overflow:hidden;">
+      <!-- Diagonal watermark -->
+      <div style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%) rotate(-30deg); font-family:'Fraunces', serif; font-weight:700; font-size:64px; color:#0b1f3a; opacity:0.07; white-space:nowrap; z-index:0;">
+        NATI ACADEMY
+      </div>
+
+      <div style="position:relative; z-index:1;">
+        <div style="display:flex; align-items:center; gap:16px; border-bottom:3px solid #c9a227; padding-bottom:16px; margin-bottom:24px;">
+          <img id="pdfLogo" src="logo.png" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid #c9a227;">
+          <div>
+            <div style="font-family:'Fraunces', serif; font-weight:700; font-size:24px; color:#0b1f3a;">Nati Academy</div>
+            <div style="font-size:12px; font-style:italic; color:#6b7280;">Excellence in Character and Learning</div>
+            <div style="font-size:10.5px; color:#9a9484;">Founded 1984 · Takum, Taraba State</div>
+          </div>
+          <div style="margin-left:auto; text-align:center;">
+            <div style="width:56px; height:56px; border-radius:50%; background:#c9a227; color:#0b1f3a; display:flex; align-items:center; justify-content:center; font-family:'Fraunces', serif; font-weight:700; font-size:11px; transform:rotate(-8deg);">
+              VERIFIED
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;">
+          <img id="pdfPhoto" src="" style="width:96px; height:96px; border-radius:6px; object-fit:cover; border:2.5px solid #c9a227; display:none;">
+          <div>
+            <div id="pdfName" style="font-family:'Fraunces', serif; font-weight:600; font-size:20px; color:#0b1f3a;">—</div>
+            <div id="pdfMeta" style="font-size:13px; color:#6b7280; margin-top:2px;">—</div>
+          </div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; font-size:12px; border:2px solid #0b1f3a;">
+          <thead>
+            <tr>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">Subject</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">1st CA</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">2nd CA</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">Ass</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">Total A</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">Exam</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">Total B</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">BF</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">Final</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">Grade</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">Position</th>
+              <th style="text-align:left; font-size:9.5px; text-transform:uppercase; color:#e6c766; padding:9px 7px; background:#0b1f3a; border:1px solid #071730;">Remark</th>
+            </tr>
+          </thead>
+          <tbody id="pdfBody"></tbody>
+        </table>
+
+        <div style="margin-top:32px; display:flex; justify-content:space-between; align-items:flex-end; font-size:10.5px; color:#9a9484; border-top:1px dashed #d9d2bd; padding-top:14px;">
+          <div>
+            <div id="pdfDate">—</div>
+            <div style="margin-top:4px;">Nati Academy · P.O. Box 79, Takum, Taraba State</div>
+          </div>
+          <div style="text-align:center;">
+            <div id="pdfQRAdmNo" style="font-family:'Space Mono', monospace; font-size:10px; color:#0b1f3a; font-weight:700; margin-bottom:4px;">—</div>
+            <img id="pdfQR" src="" width="84" height="84" style="border:1.5px solid #d9d2bd; border-radius:3px;">
+            <div style="font-size:8.5px; color:#9a9484; margin-top:3px; letter-spacing:0.03em;">SCAN TO VERIFY ONLINE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
+
   // ⚠️ Replace this with your own Google Apps Script Web App URL (see setup guide).
   const API_URL = "https://script.google.com/macros/s/AKfycbwV-GM80-8v_XinqbfotKO-xRxifdLOH8d3B3-rWpOQohZMdj1kT6uCP3e15O8Su41c-w/exec";
+
+  async function downloadPDF(){
+    if(!lastResultData) return;
+    const data = lastResultData;
+    const btn = document.getElementById('downloadBtn');
+    btn.disabled = true;
+    btn.textContent = "Preparing PDF...";
+
+    document.getElementById('pdfName').textContent = data.name;
+    document.getElementById('pdfMeta').textContent = `${data.class} · ${data.term} · ${data.session}`;
+    document.getElementById('pdfDate').textContent = "Generated " + new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+
+    document.getElementById('pdfQRAdmNo').textContent = lastAdmNo;
+    const siteUrl = window.location.href.split('?')[0];
+    document.getElementById('pdfQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(siteUrl)}`;
+
+    const pdfPhoto = document.getElementById('pdfPhoto');
+    const mainPhoto = document.getElementById('rPhoto');
+    if(mainPhoto.style.display !== 'none' && mainPhoto.src){
+      pdfPhoto.src = mainPhoto.src;
+      pdfPhoto.style.display = '';
+    } else {
+      pdfPhoto.style.display = 'none';
+    }
+
+    const pdfBody = document.getElementById('pdfBody');
+    pdfBody.innerHTML = "";
+    data.subjects.forEach((s, idx) => {
+      tr.innerHTML = `<td style="${cellStyle}">${s.name}</td><td style="${cellStyle}">${s.ca1}</td>
+        <td style="${cellStyle}">${s.ca2}</td><td style="${cellStyle}">${s.ass}</td>
+        <td style="${cellStyle}">${s.totalA}</td><td style="${cellStyle}">${s.exam}</td>
+        <td style="${cellStyle}">${s.totalB}</td><td style="${cellStyle}">${s.bf}</td>
+        <td style="${cellStyle}">${s.finalScore}</td><td style="${cellStyle}">${s.grade}</td>
+        <td style="${cellStyle}">${s.position || "—"}</td><td style="${cellStyle}">${s.remark}</td>`;
+      pdfBody.appendChild(tr);
+    });
+
+    try{
+      const template = document.getElementById('pdfTemplate');
+
+      // Ensure the QR code image has fully loaded before capturing
+      const qrImg = document.getElementById('pdfQR');
+      await new Promise((resolve) => {
+        if (qrImg.complete && qrImg.naturalWidth > 0) return resolve();
+        qrImg.onload = () => resolve();
+        qrImg.onerror = () => resolve(); // continue even if QR fails to load
+        setTimeout(resolve, 3000); // safety timeout
+      });
+
+      const canvas = await html2canvas(template, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pageWidth - 40;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, 'JPEG', 20, 20, imgWidth, imgHeight);
+
+      const fileName = `${lastAdmNo.replace(/[^A-Za-z0-9]/g, '_')}_${data.term.replace(/\s+/g, '_')}_result.pdf`;
+      pdf.save(fileName);
+    }catch(err){
+      alert("Could not generate PDF. Please try again.");
+    }finally{
+      btn.disabled = false;
+      btn.textContent = "Download as PDF";
+    }
+  }
 
   function handlePhotoError(img){
     if(img.dataset.tried === 'jpg'){
@@ -386,7 +529,13 @@
     }
   }
 
+  let lastResultData = null;
+  let lastAdmNo = null;
+
   function renderResult(data, admNo){
+    lastResultData = data;
+    lastAdmNo = admNo;
+
     document.getElementById('rName').textContent = data.name;
     document.getElementById('rMeta').textContent = `${data.class} · ${data.term} · ${data.session}`;
 
