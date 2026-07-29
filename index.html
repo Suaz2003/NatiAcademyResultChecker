@@ -434,7 +434,22 @@
   async function buildResultCanvas(){
     const panelId = activeLevel === 'primary' ? 'resultPrimary' : 'resultSecondary';
     const panel = document.getElementById(panelId);
-    return await html2canvas(panel, { scale: 1.8, useCORS: true, backgroundColor: '#ffffff' });
+
+    // html2canvas defaults to capturing based on the current scroll position
+    // and viewport size, which cuts off tall elements like this one. These
+    // options force it to capture the panel's true full height regardless
+    // of how far the page is scrolled or how tall the screen is.
+    return await html2canvas(panel, {
+      scale: 1.8,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      windowWidth: document.documentElement.scrollWidth,
+      windowHeight: document.documentElement.scrollHeight,
+      height: panel.scrollHeight,
+      width: panel.scrollWidth
+    });
   }
 
   async function downloadImage(){
