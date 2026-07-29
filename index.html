@@ -69,7 +69,27 @@
   .status{ margin-top:16px; font-size:13px; text-align:center; min-height:18px; }
   .status.error{color:var(--error);}
 
-  .result-panel{ display:none; margin-top:28px; border-top:1px dashed var(--line); padding-top:24px; }
+  .result-panel{ display:none; margin-top:28px; border-top:1px dashed var(--line); padding-top:24px; position:relative; overflow:hidden; }
+  .panel-content{ position:relative; z-index:1; }
+  .watermark{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    z-index:0; opacity:0.08; display:flex; flex-direction:column; align-items:center;
+    pointer-events:none; width:85%; text-align:center;
+  }
+  .watermark img{ width:230px; height:230px; object-fit:contain; border-radius:50%; }
+  .watermark .wm-text{
+    font-family:'Fraunces', serif; font-weight:700; font-size:19px; color:var(--navy);
+    margin-top:14px; letter-spacing:0.04em; line-height:1.4;
+  }
+  .doc-header{
+    text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:2px solid var(--gold);
+  }
+  .doc-header img{
+    width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); margin-bottom:6px;
+  }
+  .doc-header .dh-name{ font-family:'Fraunces', serif; font-weight:700; font-size:18px; color:var(--navy); }
+  .doc-header .dh-motto{ font-size:11px; font-style:italic; color:#6b7280; margin-top:2px; }
+  .doc-header .dh-meta{ font-size:10px; color:#9a9484; margin-top:2px; }
   .result-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:16px; }
   .passport{ width:80px; height:80px; border-radius:6px; object-fit:cover; border:2px solid var(--gold); flex-shrink:0; }
   .passport-fallback{ width:80px; height:80px; border-radius:6px; border:2px solid var(--gold); background:var(--cream); display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; }
@@ -160,6 +180,18 @@
 
     <!-- SECONDARY RESULT PANEL -->
     <div class="result-panel" id="resultSecondary">
+      <div class="watermark">
+        <img src="logo.png" alt="" onerror="this.style.display='none';">
+        <div class="wm-text">NATI ACADEMY<br>Excellence in Character and Learning</div>
+      </div>
+      <div class="panel-content">
+      <div class="doc-header">
+        <img src="logo.png" alt="Nati Academy logo" onerror="this.style.display='none';">
+        <div class="dh-name">Nati Academy</div>
+        <div class="dh-motto">Excellence in Character and Learning</div>
+        <div class="dh-meta">Founded 1984 · P.O. Box 79, Takum, Taraba State</div>
+      </div>
+
       <div class="result-header">
         <img class="passport" id="sPhoto" src="" alt="Student passport" onerror="handlePhotoError(this,'s')">
         <div class="passport-fallback" id="sPhotoFallback" style="display:none;">📷</div>
@@ -182,10 +214,23 @@
         <tbody id="sBody"></tbody>
       </table>
       </div>
+      </div>
     </div>
 
     <!-- PRIMARY RESULT PANEL -->
     <div class="result-panel" id="resultPrimary">
+      <div class="watermark">
+        <img src="logo.png" alt="" onerror="this.style.display='none';">
+        <div class="wm-text">NATI ACADEMY<br>Excellence in Character and Learning</div>
+      </div>
+      <div class="panel-content">
+      <div class="doc-header">
+        <img src="logo.png" alt="Nati Academy logo" onerror="this.style.display='none';">
+        <div class="dh-name">Nati Academy</div>
+        <div class="dh-motto">Excellence in Character and Learning</div>
+        <div class="dh-meta">Founded 1984 · P.O. Box 79, Takum, Taraba State</div>
+      </div>
+
       <div class="result-header">
         <img class="passport" id="pPhoto" src="" alt="Pupil passport" onerror="handlePhotoError(this,'p')">
         <div class="passport-fallback" id="pPhotoFallback" style="display:none;">📷</div>
@@ -252,6 +297,7 @@
           <img id="pQrImg" src="" alt="QR code">
           <div class="footer-label">SCAN TO VERIFY ONLINE</div>
         </div>
+      </div>
       </div>
     </div>
 
