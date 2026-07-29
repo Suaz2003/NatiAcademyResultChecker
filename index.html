@@ -440,7 +440,7 @@
     // options force it to capture the panel's true full height regardless
     // of how far the page is scrolled or how tall the screen is.
     return await html2canvas(panel, {
-      scale: 1.8,
+      scale: 2,
       useCORS: true,
       backgroundColor: '#ffffff',
       scrollX: 0,
@@ -452,14 +452,47 @@
     });
   }
 
+  // Standard A4 portrait proportions at print-quality resolution (150dpi).
+  const A4_WIDTH_PX = 1240;
+  const A4_HEIGHT_PX = 1754;
+
+  // Places the captured content onto a proper A4 portrait page: white
+  // background, even margins, scaled down (never up) so everything fits
+  // on one page instead of being cropped or stretched.
+  function composeOnA4(sourceCanvas, marginPx = 70){
+    const a4 = document.createElement('canvas');
+    a4.width = A4_WIDTH_PX;
+    a4.height = A4_HEIGHT_PX;
+    const ctx = a4.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, a4.width, a4.height);
+
+    const availW = a4.width - marginPx * 2;
+    const availH = a4.height - marginPx * 2;
+    const scale = Math.min(availW / sourceCanvas.width, availH / sourceCanvas.height, 1);
+    const drawW = sourceCanvas.width * scale;
+    const drawH = sourceCanvas.height * scale;
+    const offsetX = (a4.width - drawW) / 2;
+    const offsetY = marginPx; // top-aligned, like a real printed document
+
+    // subtle page border for a finished, document-like look
+    ctx.strokeStyle = '#d9d2bd';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(24, 24, a4.width - 48, a4.height - 48);
+
+    ctx.drawImage(sourceCanvas, offsetX, offsetY, drawW, drawH);
+    return a4;
+  }
+
   async function downloadImage(){
     const btn = document.getElementById('downloadImgBtn');
     btn.disabled = true; btn.textContent = "Preparing...";
     try{
       const canvas = await buildResultCanvas();
+      const a4Canvas = composeOnA4(canvas);
       const link = document.createElement('a');
       link.download = `${lastAdmNo.replace(/[^A-Za-z0-9]/g,'_')}_${lastResultData.term.replace(/\s+/g,'_')}_result.png`;
-      link.href = canvas.toDataURL('image/png');
+      link.href = a4Canvas.toDataURL('image/png');
       link.click();
     }catch(err){
       alert("Could not generate image. Please try again.");
@@ -473,13 +506,13 @@
     btn.disabled = true; btn.textContent = "Preparing PDF...";
     try{
       const canvas = await buildResultCanvas();
-      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+      const a4Canvas = composeOnA4(canvas);
+      const imgData = a4Canvas.toDataURL('image/jpeg', 0.95);
       const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'pt', 'a4');
+      const pdf = new jsPDF('p', 'pt', 'a4'); // 595.28 x 841.89 pt, matches A4_WIDTH_PX:A4_HEIGHT_PX ratio
       const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgWidth = pageWidth - 40;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      pdf.addImage(imgData, 'JPEG', 20, 20, imgWidth, imgHeight);
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, pageHeight);
       const fileName = `${lastAdmNo.replace(/[^A-Za-z0-9]/g,'_')}_${lastResultData.term.replace(/\s+/g,'_')}_result.pdf`;
       pdf.save(fileName);
     }catch(err){
