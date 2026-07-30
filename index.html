@@ -564,7 +564,7 @@
       const pdf = new jsPDF('p', 'pt', 'a4'); // 595.28 x 841.89 pt, matches A4_WIDTH_PX:A4_HEIGHT_PX ratio
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight, undefined, 'FAST');
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight, undefined, 'NONE');
       const fileName = `${lastAdmNo.replace(/[^A-Za-z0-9]/g,'_')}_${lastResultData.term.replace(/\s+/g,'_')}_result.pdf`;
       pdf.save(fileName);
     }catch(err){
