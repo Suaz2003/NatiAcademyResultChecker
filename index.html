@@ -485,8 +485,10 @@
     // and viewport size, which cuts off tall elements like this one. These
     // options force it to capture the panel's true full height regardless
     // of how far the page is scrolled or how tall the screen is.
+    // scale:3 captures extra detail so downsizing into the final page (below)
+    // sharpens rather than blurs — like supersampling.
     return await html2canvas(panel, {
-      scale: 2,
+      scale: 3,
       useCORS: true,
       backgroundColor: '#ffffff',
       scrollX: 0,
@@ -498,18 +500,22 @@
     });
   }
 
-  // Standard A4 portrait proportions at print-quality resolution (150dpi).
-  const A4_WIDTH_PX = 1240;
-  const A4_HEIGHT_PX = 1754;
+  // True 300dpi A4 portrait — the professional print-industry standard
+  // (newspapers, passport photos, print shops). Higher than this risks
+  // crashing the browser tab on phones without any visible sharpness gain.
+  const A4_WIDTH_PX = 2480;
+  const A4_HEIGHT_PX = 3508;
 
   // Places the captured content onto a proper A4 portrait page: white
   // background, even margins, scaled down (never up) so everything fits
   // on one page instead of being cropped or stretched.
-  function composeOnA4(sourceCanvas, marginPx = 70){
+  function composeOnA4(sourceCanvas, marginPx = 140){
     const a4 = document.createElement('canvas');
     a4.width = A4_WIDTH_PX;
     a4.height = A4_HEIGHT_PX;
     const ctx = a4.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, a4.width, a4.height);
 
@@ -523,8 +529,8 @@
 
     // subtle page border for a finished, document-like look
     ctx.strokeStyle = '#d9d2bd';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(24, 24, a4.width - 48, a4.height - 48);
+    ctx.lineWidth = 3;
+    ctx.strokeRect(48, 48, a4.width - 96, a4.height - 96);
 
     ctx.drawImage(sourceCanvas, offsetX, offsetY, drawW, drawH);
     return a4;
@@ -532,13 +538,13 @@
 
   async function downloadImage(){
     const btn = document.getElementById('downloadImgBtn');
-    btn.disabled = true; btn.textContent = "Preparing...";
+    btn.disabled = true; btn.textContent = "Preparing high-res image...";
     try{
       const canvas = await buildResultCanvas();
       const a4Canvas = composeOnA4(canvas);
       const link = document.createElement('a');
       link.download = `${lastAdmNo.replace(/[^A-Za-z0-9]/g,'_')}_${lastResultData.term.replace(/\s+/g,'_')}_result.png`;
-      link.href = a4Canvas.toDataURL('image/png');
+      link.href = a4Canvas.toDataURL('image/png'); // lossless — no compression artifacts
       link.click();
     }catch(err){
       alert("Could not generate image. Please try again.");
@@ -549,16 +555,16 @@
 
   async function downloadPDF(){
     const btn = document.getElementById('downloadPdfBtn');
-    btn.disabled = true; btn.textContent = "Preparing PDF...";
+    btn.disabled = true; btn.textContent = "Preparing high-res PDF...";
     try{
       const canvas = await buildResultCanvas();
       const a4Canvas = composeOnA4(canvas);
-      const imgData = a4Canvas.toDataURL('image/jpeg', 0.95);
+      const imgData = a4Canvas.toDataURL('image/png'); // lossless, sharper than JPEG at any zoom
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF('p', 'pt', 'a4'); // 595.28 x 841.89 pt, matches A4_WIDTH_PX:A4_HEIGHT_PX ratio
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, pageHeight);
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight, undefined, 'FAST');
       const fileName = `${lastAdmNo.replace(/[^A-Za-z0-9]/g,'_')}_${lastResultData.term.replace(/\s+/g,'_')}_result.pdf`;
       pdf.save(fileName);
     }catch(err){
