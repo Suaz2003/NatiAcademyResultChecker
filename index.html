@@ -497,23 +497,50 @@
     const panelId = activeLevel === 'primary' ? 'resultPrimary' : 'resultSecondary';
     const panel = document.getElementById(panelId);
 
-    // html2canvas defaults to capturing based on the current scroll position
-    // and viewport size, which cuts off tall elements like this one. These
-    // options force it to capture the panel's true full height regardless
-    // of how far the page is scrolled or how tall the screen is.
-    // scale:3 captures extra detail so downsizing into the final page (below)
-    // sharpens rather than blurs — like supersampling.
-    return await html2canvas(panel, {
-      scale: 3,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      scrollX: 0,
-      scrollY: -window.scrollY,
-      windowWidth: document.documentElement.scrollWidth,
-      windowHeight: document.documentElement.scrollHeight,
-      height: panel.scrollHeight,
-      width: panel.scrollWidth
+    // The on-screen layout is narrow (phone-friendly), which forces wide
+    // tables into horizontal scroll. html2canvas cannot capture content
+    // that's scrolled out of view, so columns would silently go missing.
+    // Fix: temporarily widen the panel and disable scroll-clipping just
+    // for the capture, then restore everything immediately after.
+    const prevWidth = panel.style.width;
+    const prevMaxWidth = panel.style.maxWidth;
+    const prevOverflow = panel.style.overflow;
+    panel.style.width = '1100px';
+    panel.style.maxWidth = 'none';
+    panel.style.overflow = 'visible';
+
+    const scrollWraps = panel.querySelectorAll('div[style*="overflow-x:auto"]');
+    const prevWrapOverflow = [];
+    scrollWraps.forEach(el => {
+      prevWrapOverflow.push(el.style.overflow);
+      el.style.overflow = 'visible';
     });
+
+    // let the browser finish reflowing the wider layout before capturing
+    await new Promise(resolve => setTimeout(resolve, 60));
+
+    let canvas;
+    try{
+      canvas = await html2canvas(panel, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: -window.scrollY,
+        windowWidth: document.documentElement.scrollWidth,
+        windowHeight: document.documentElement.scrollHeight,
+        height: panel.scrollHeight,
+        width: panel.scrollWidth
+      });
+    } finally {
+      // always restore, even if capture throws
+      panel.style.width = prevWidth;
+      panel.style.maxWidth = prevMaxWidth;
+      panel.style.overflow = prevOverflow;
+      scrollWraps.forEach((el, i) => { el.style.overflow = prevWrapOverflow[i]; });
+    }
+
+    return canvas;
   }
 
   // True 300dpi A4 portrait — the professional print-industry standard
