@@ -34,14 +34,14 @@
   .crest{
     width:64px; height:64px; border:2px solid var(--gold); border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    font-family:'Fraunces', serif; font-weight:700; font-size:22px; color:var(--navy);
+    font-family:'Fraunces', serif; font-weight:700; font-size:24px; color:var(--navy);
     background:radial-gradient(circle at 35% 30%, #fff 0%, var(--cream) 70%);
     margin-bottom:18px; box-shadow:0 0 0 1px var(--navy) inset; object-fit:cover;
   }
   h1{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(24px, 4vw, 32px); color:var(--navy); text-align:center; letter-spacing:-0.01em; }
-  .motto{ font-size:12.5px; font-style:italic; color:#6b7280; margin-top:4px; text-align:center; }
-  .founded{ font-size:11px; color:#9a9484; margin-top:3px; text-align:center; }
-  .tagline{ font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-top:6px; font-weight:600; text-align:center; }
+  .motto{ font-size:14.5px; font-style:italic; color:#6b7280; margin-top:4px; text-align:center; }
+  .founded{ font-size:13px; color:#9a9484; margin-top:3px; text-align:center; }
+  .tagline{ font-size:15px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-top:6px; font-weight:600; text-align:center; }
 
   .card{
     width:100%; max-width:520px; background:#fff; border:1px solid var(--line); border-radius:4px;
@@ -49,9 +49,9 @@
   }
   .card::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, var(--navy) 0%, var(--gold) 100%); }
 
-  label{ display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--navy); margin-bottom:6px; }
+  label{ display:block; font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--navy); margin-bottom:6px; }
   input, select{
-    width:100%; padding:12px 14px; font-family:'Space Mono', monospace; font-size:15px;
+    width:100%; padding:12px 14px; font-family:'Space Mono', monospace; font-size:17px;
     border:1.5px solid var(--line); border-radius:3px; background:var(--cream); color:var(--ink); margin-bottom:18px;
   }
   select{font-family:'Inter', sans-serif; font-weight:500;}
@@ -59,14 +59,14 @@
 
   button{
     width:100%; padding:14px; background:var(--navy); color:#fff; border:none; border-radius:3px;
-    font-family:'Inter', sans-serif; font-weight:600; font-size:14px; cursor:pointer; transition:background .15s ease;
+    font-family:'Inter', sans-serif; font-weight:600; font-size:16px; cursor:pointer; transition:background .15s ease;
   }
   button:hover{background:var(--navy-deep);}
   button:disabled{opacity:0.6; cursor:wait;}
   #downloadPdfBtn{ background:var(--gold); color:var(--navy); margin-top:16px; }
   #downloadImgBtn{ background:#fff; color:var(--navy); border:1.5px solid var(--navy); margin-top:10px; }
 
-  .status{ margin-top:16px; font-size:13px; text-align:center; min-height:18px; }
+  .status{ margin-top:16px; font-size:15px; text-align:center; min-height:18px; }
   .status.error{color:var(--error);}
 
   .result-panel{ display:none; margin-top:28px; border-top:1px dashed var(--line); padding-top:24px; position:relative; overflow:hidden; }
@@ -78,7 +78,7 @@
   }
   .watermark img{ width:230px; height:230px; object-fit:contain; border-radius:50%; }
   .watermark .wm-text{
-    font-family:'Fraunces', serif; font-weight:700; font-size:19px; color:var(--navy);
+    font-family:'Fraunces', serif; font-weight:700; font-size:21px; color:var(--navy);
     margin-top:14px; letter-spacing:0.04em; line-height:1.4;
   }
   .doc-header{
@@ -87,49 +87,54 @@
   .doc-header img{
     width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); margin-bottom:6px;
   }
-  .doc-header .dh-name{ font-family:'Fraunces', serif; font-weight:700; font-size:18px; color:var(--navy); }
-  .doc-header .dh-motto{ font-size:11px; font-style:italic; color:#6b7280; margin-top:2px; }
-  .doc-header .dh-meta{ font-size:10px; color:#9a9484; margin-top:2px; }
+  .doc-header .dh-name{ font-family:'Fraunces', serif; font-weight:700; font-size:20px; color:var(--navy); }
+  .doc-header .dh-motto{ font-size:13px; font-style:italic; color:#6b7280; margin-top:2px; }
+  .doc-header .dh-meta{ font-size:12px; color:#9a9484; margin-top:2px; }
   .result-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:16px; }
   .passport{ width:80px; height:80px; border-radius:6px; object-fit:cover; border:2px solid var(--gold); flex-shrink:0; }
-  .passport-fallback{ width:80px; height:80px; border-radius:6px; border:2px solid var(--gold); background:var(--cream); display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; }
-  .result-name{ font-family:'Fraunces', serif; font-size:19px; font-weight:600; color:var(--navy); }
-  .result-meta{ font-size:12px; color:#6b7280; margin-top:2px; }
+  .passport-fallback{ width:80px; height:80px; border-radius:6px; border:2px solid var(--gold); background:var(--cream); display:flex; align-items:center; justify-content:center; font-size:32px; flex-shrink:0; }
+  .result-name{ font-family:'Fraunces', serif; font-size:21px; font-weight:600; color:var(--navy); }
+  .result-meta{ font-size:14px; color:#6b7280; margin-top:2px; }
   .seal{
     width:56px; height:56px; border-radius:50%; background:var(--gold); color:var(--navy);
     display:flex; align-items:center; justify-content:center; font-family:'Fraunces', serif;
-    font-weight:700; font-size:11px; flex-shrink:0; transform:rotate(-8deg); box-shadow:0 2px 6px rgba(201,162,39,0.5);
+    font-weight:700; font-size:13px; flex-shrink:0; transform:rotate(-8deg); box-shadow:0 2px 6px rgba(201,162,39,0.5);
   }
 
-  h3.section-title{ font-family:'Fraunces', serif; font-size:15px; color:var(--navy); margin:22px 0 10px; border-bottom:2px solid var(--gold); padding-bottom:4px; }
+  h3.section-title{ font-family:'Fraunces', serif; font-size:17px; color:var(--navy); margin:22px 0 10px; border-bottom:2px solid var(--gold); padding-bottom:4px; }
 
-  table{ width:100%; border-collapse:collapse; font-size:12.5px; border:1.5px solid var(--navy); }
-  th{ text-align:left; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--gold-soft); padding:8px 6px; background:var(--navy); border:1px solid var(--navy-deep); }
+  .primary-tables-row{ display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap; }
+  .cognitive-col{ flex:2 1 380px; min-width:0; }
+  .psychomotor-col{ flex:1 1 220px; min-width:0; }
+  .psychomotor-col table{ font-size:13.5px; }
+
+  table{ width:100%; border-collapse:collapse; font-size:14.5px; border:1.5px solid var(--navy); }
+  th{ text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--gold-soft); padding:8px 6px; background:var(--navy); border:1px solid var(--navy-deep); }
   td{ padding:8px 6px; border:1px solid var(--line); font-family:'Space Mono', monospace; }
   td:first-child, th:first-child{font-family:'Inter', sans-serif; font-weight:600;}
   tbody tr:nth-child(even){background:var(--cream);}
   tfoot td{ font-weight:700; background:var(--cream); border-top:2px solid var(--navy); }
 
-  .comment-box{ margin-top:16px; padding:14px; background:var(--cream); border:1px solid var(--line); border-radius:4px; font-size:13px; line-height:1.5; }
-  .comment-box strong{ color:var(--navy); display:block; margin-bottom:4px; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; }
+  .comment-box{ margin-top:16px; padding:14px; background:var(--cream); border:1px solid var(--line); border-radius:4px; font-size:15px; line-height:1.5; }
+  .comment-box strong{ color:var(--navy); display:block; margin-bottom:4px; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; }
 
-  .dates-row{ display:flex; flex-wrap:wrap; gap:14px; margin-top:16px; font-size:12px; color:#6b7280; }
-  .dates-row div strong{ display:block; color:var(--navy); font-size:10px; text-transform:uppercase; letter-spacing:0.04em; }
+  .dates-row{ display:flex; flex-wrap:wrap; gap:14px; margin-top:16px; font-size:14px; color:#6b7280; }
+  .dates-row div strong{ display:block; color:var(--navy); font-size:12px; text-transform:uppercase; letter-spacing:0.04em; }
 
   .sign-row{ display:flex; justify-content:space-between; align-items:flex-end; margin-top:24px; gap:12px; }
   .sign-block{ text-align:center; flex:1; }
   .sign-block img{ height:50px; object-fit:contain; margin-bottom:4px; }
-  .sign-block .sign-label{ font-size:10px; color:#9a9484; border-top:1px solid var(--line); padding-top:4px; }
+  .sign-block .sign-label{ font-size:12px; color:#9a9484; border-top:1px solid var(--line); padding-top:4px; }
 
   .footer-row{ display:flex; justify-content:space-between; align-items:flex-end; margin-top:26px; border-top:1px dashed var(--line); padding-top:14px; }
   #pStampImg{ width:80px; height:80px; object-fit:contain; }
   #pQrImg{ width:80px; height:80px; border:1.5px solid var(--line); border-radius:3px; }
-  .footer-label{ font-size:8.5px; color:#9a9484; text-align:center; margin-top:3px; letter-spacing:0.03em; }
+  .footer-label{ font-size:10.5px; color:#9a9484; text-align:center; margin-top:3px; letter-spacing:0.03em; }
 
-  footer{ margin-top:36px; font-size:11.5px; color:#9a9484; text-align:center; max-width:400px; }
+  footer{ margin-top:36px; font-size:13.5px; color:#9a9484; text-align:center; max-width:400px; }
 
   @media (min-width: 640px) and (max-width: 899px){ .card{ max-width:640px; padding:36px 34px; } }
-  @media (min-width: 900px){ body{ padding-top:56px; } .card{ max-width:760px; padding:44px 48px; } h1{ font-size:36px; } table{ font-size:13.5px; } }
+  @media (min-width: 900px){ body{ padding-top:56px; } .card{ max-width:760px; padding:44px 48px; } h1{ font-size:38px; } table{ font-size:15.5px; } }
 </style>
 </head>
 <body>
@@ -240,29 +245,35 @@
         </div>
       </div>
 
-      <h3 class="section-title">Cognitive Ability</h3>
-      <div style="overflow-x:auto;">
-      <table>
-        <thead>
-          <tr>
-            <th>Subject</th><th>1st CA</th><th>2nd CA</th><th>3rd CA</th><th>Exams</th>
-            <th>Term Total</th><th>Subj. Avg</th><th>Highest</th><th>Lowest</th>
-            <th>Position</th><th>Grade</th>
-          </tr>
-        </thead>
-        <tbody id="pBody"></tbody>
-        <tfoot>
-          <tr><td colspan="4">TOTAL</td><td id="pGrandTotal">—</td><td colspan="6"></td></tr>
-        </tfoot>
-      </table>
-      </div>
+      <div class="primary-tables-row">
+        <div class="cognitive-col">
+          <h3 class="section-title">Cognitive Ability</h3>
+          <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Subject</th><th>1st CA</th><th>2nd CA</th><th>3rd CA</th><th>Exams</th>
+                <th>Term Total</th><th>Subj. Avg</th><th>Highest</th><th>Lowest</th>
+                <th>Position</th><th>Grade</th>
+              </tr>
+            </thead>
+            <tbody id="pBody"></tbody>
+            <tfoot>
+              <tr><td colspan="4">TOTAL</td><td id="pGrandTotal">—</td><td colspan="6"></td></tr>
+            </tfoot>
+          </table>
+          </div>
+        </div>
 
-      <h3 class="section-title">Affective and Psychomotor Records</h3>
-      <div style="overflow-x:auto;">
-      <table>
-        <thead><tr><th>Trait</th><th>Rating (1–5)</th></tr></thead>
-        <tbody id="pTraitsBody"></tbody>
-      </table>
+        <div class="psychomotor-col">
+          <h3 class="section-title">Affective and Psychomotor Records</h3>
+          <div style="overflow-x:auto;">
+          <table>
+            <thead><tr><th>Trait</th><th>Rating (1–5)</th></tr></thead>
+            <tbody id="pTraitsBody"></tbody>
+          </table>
+          </div>
+        </div>
       </div>
 
       <div class="comment-box">
@@ -428,6 +439,11 @@
     tbody.innerHTML = "";
     let grandTotal = 0;
     (data.subjects || []).forEach(s => {
+      // Skip a literal "TOTAL" row if one exists in the sheet (matching the
+      // paper dossier) — we compute our own total below, so counting both
+      // would duplicate it.
+      if (String(s.name || "").trim().toUpperCase() === "TOTAL") return;
+
       grandTotal += Number(s.termTotal) || 0;
       const tr = document.createElement('tr');
       tr.innerHTML = `<td>${s.name}</td><td>${s.ca1}</td><td>${s.ca2}</td><td>${s.ca3}</td>
